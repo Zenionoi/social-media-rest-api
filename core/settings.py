@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 from os import getenv
 from dotenv import load_dotenv
@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "drf_spectacular",
+    "feed",
+    "user",
 ]
 
 MIDDLEWARE = [
@@ -131,8 +133,32 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.AnonRateThrottle",
         "rest_framework.throttling.UserRateThrottle",
     ],
-    "DEFAULT_THROTTLE_RATES": {"anon": "10/day", "user": "30/day"},
+    "DEFAULT_THROTTLE_RATES": {"anon": "1000/day", "user": "3000/day"},
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+}
+
+AUTH_USER_MODEL = "user.User"
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=3),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=10),
+    "ROTATE_REFRESH_TOKENS": False,
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Social media api",
+    "DESCRIPTION":
+        "Social media API for creating and managing user accounts and posts. "
+        "Supports JWT authentication and provides endpoints "
+        "for searching and filtering posts by title and content.",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "defaultModelRendering": "model",
+        "defaultModelsExpandDepth": 2,
+        "defaultModelExpandDepth": 2,
+    },
 }
